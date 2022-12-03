@@ -1,5 +1,5 @@
 //jshint esversion:6
-
+require("dotenv").config();
 const exp = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
@@ -43,21 +43,21 @@ app.post("/compose", (req, res) => {
 
 app.post("/contact", (req, res) => {
   let data = req.body;
-  console.log(data.email)
+  console.log(data.email);
   console.log(data);
 
-  const client_id =
-    "430658692390-ctdlh2bsfjtlhscafpc3q8g5nc0co16o.apps.googleusercontent.com";
-  const client_secret = "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";
+  const client_id = process.env.client_id;
+
+  const client_secret = process.env.client_secret;
   const redirect_url = "https://developers.google.com/oauthplayground";
-  const refrsh_token =
-    "1//04qgxMWeUXT8ECgYIARAAGAQSNwF-L9IriKsq1PXP8rD9it0nFLunetCZ1IJgMMJpWaQlD5PBcE-jpXAACB_0ts1QuJZ9XZktihE";
+  const refresh_token = process.env.refresh_token;
+
   const oAuth2Client = new google.auth.OAuth2(
     client_id,
     client_secret,
     redirect_url
   );
-  oAuth2Client.setCredentials({ refresh_token: refrsh_token });
+  oAuth2Client.setCredentials({ refresh_token: refresh_token });
 
   async function sendMail() {
     try {
@@ -70,7 +70,7 @@ app.post("/contact", (req, res) => {
           user: "singh.aradhya2019@gmail.com",
           clientId: client_id,
           clientSecret: client_secret,
-          refreshToken: refrsh_token,
+          refreshToken: refresh_token,
           accessToken: access_token,
         },
       });
@@ -93,12 +93,13 @@ app.post("/contact", (req, res) => {
 
   sendMail()
     .then((messg) => {
-      res.redirect("/contact")
-      }).catch((err) => {
+      res.redirect("/contact");
+    })
+    .catch((err) => {
       console.log(err.message);
     });
-    /* res.redirect("/contact") */
-    //res.render("contact",{bottom:"email has been sent successfully"})
+  /* res.redirect("/contact") */
+  //res.render("contact",{bottom:"email has been sent successfully"})
 });
 
 app.get("/:topic", (req, res) => {
@@ -117,10 +118,10 @@ app.get("/:topic", (req, res) => {
     /* console.log("Not found"); */
   } else {
     res.render("post", { pTitle: posts[i].title, pBody: posts[i].content });
-   /*  console.log("Found"); */
+    /*  console.log("Found"); */
   }
 });
 
-app.listen( process.env.PORT || 3000, function () {
+app.listen(process.env.PORT || 3000, function () {
   console.log("Server started");
 });
