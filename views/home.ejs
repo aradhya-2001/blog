@@ -1,0 +1,14 @@
+<%-include("partials/header")-%>
+
+<h1>Home</h1>
+<p>I am an undergrad student persuing Electronics and Communication Engineering from SRM IST.</p>
+
+<% postContent.forEach((i)=>{%>
+<h1><%=i.title%></h1>  <!-- here since we require the value of title and content so we used ejs output tag.Scarlet tag dont give output -->
+<% if(i.content.length>12){ %> 
+<p><%= i.content.slice(0,11)+"... " %> <a href="/<%=i.title%>">Read More</a> </p>
+<%}else{%>
+  <p><%= i.content %> </p>
+  <%}%>
+<% }); %> 
+<%-include("partials/footer")-%>
